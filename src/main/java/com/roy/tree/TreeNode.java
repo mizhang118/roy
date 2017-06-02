@@ -5,6 +5,13 @@ public class TreeNode {
 	private TreeNode left;
 	private TreeNode right;
 	
+	public TreeNode() {
+	}
+	
+	public TreeNode(Integer d) {
+		this.data = d;
+	}
+	
 	public Integer getData() {
 		return data;
 	}
