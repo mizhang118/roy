@@ -73,7 +73,22 @@ public class LinkedList {
 	 * @param node
 	 */
 	public void addFirst(Node node) {
-		//
+		if ( node == null ) {
+			return;
+		}
+		
+		//handle empty list
+		if ( head == null || tail == null ) {
+			head = node;
+			tail = node;
+			return;
+		}
+		
+		//handle one or more elements already exists in the list
+		node.setNext(head);
+		head.setPrevious(node);
+		
+		head = node;
 	}
 	
 	/**
@@ -81,7 +96,18 @@ public class LinkedList {
 	 * @param node
 	 */
 	public void addLast(Node node) {
-		//
+		//Do this for non-empty linked lists.
+		if (tail != null) {
+			tail.setNext(node);
+			node.setPrevious(tail);
+			
+			tail = node;
+		}
+		//This is for empty linked lists.
+		else {
+			head = node;
+			tail = node;
+		}
 	}
 	
 	/**
@@ -89,9 +115,19 @@ public class LinkedList {
 	 * @return
 	 */
 	public Node removeFirst() {
-		//
+		if ( head == null ) {
+			return null;
+		}
+
+		Node oldHead = head;
+		head = oldHead.getNext();
 		
-		return null;
+		//handle empty case
+		if ( head == null ) {
+			tail = null;
+		}
+		
+		return oldHead;
 	}
 	
 	/**
@@ -99,8 +135,13 @@ public class LinkedList {
 	 * @return
 	 */
 	public Node removeLast() {
-		
-		return null;
+		Node oldTail = tail;
+		tail = oldTail.getPrevious();
+		if ( tail == null ) {
+			head = null;
+		}
+
+		return oldTail;
 	}
 	
 	@Override
@@ -115,6 +156,7 @@ public class LinkedList {
 			}
 			
 			builder.append(tmp.toString());
+			tmp = tmp.getNext();
 			count++;
 		}
 		builder.append("]");

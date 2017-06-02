@@ -32,6 +32,7 @@ public class OrderedLinkedList {
 			}
 			
 			builder.append(tmp.toString());
+			tmp = tmp.getNext();
 			count++;
 		}
 		builder.append("]");
@@ -43,7 +44,44 @@ public class OrderedLinkedList {
 	 * TODO: implement this method to add the node into a right place to generate a ordered linked list
 	 */
 	public void insert(Node node) {
-	
+		Node pointer = null;
+		
+		//hanlde case of empty list
+		if ( head == null || tail == null ) {
+			head = node;
+			tail = node;
+			return;
+		}
+		
+		//handle the case of inserting into head
+		if (head.getData() >= node.getData()) {
+			node.setNext(head);
+			head.setPrevious(node);
+			head = node;
+			return;
+		}
+		
+		//handle the case of inserting into tail
+		if (tail.getData() <= node.getData()) {
+			node.setPrevious(tail);
+			tail.setNext(node);
+			tail = node;
+			return;
+		}
+
+		//handle the case of inserting into middle
+		pointer = head.getNext();
+		while ( pointer != null ) {
+			if (node.getData() <= pointer.getData()) {
+				node.setPrevious(pointer.getPrevious());
+				node.setNext(pointer);
+				pointer.getPrevious().setNext(node);
+				
+				//poiter.setPrevous has to be called at last, otherwise, prevous node will be lost
+				pointer.setPrevious(node);
+			}
+			pointer = pointer.getNext();
+		}
 	}
 	
 	public static void main(String[] args) {
