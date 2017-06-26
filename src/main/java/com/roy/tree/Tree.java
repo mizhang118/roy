@@ -6,14 +6,22 @@ import java.util.Queue;
 
 public class Tree {
 	private TreeNode root;
+	
+	public TreeNode getRoot() {
+		return this.root;
+	}
+	
+	public void setRoot(TreeNode node) {
+		this.root = node;
+	}
 
 	public void insert(TreeNode dataNode) {
 		if ( root == null ) {
 			root = dataNode;
 		}
 		else {
-			insertRecursive(root, dataNode);
-		}
+			insertByLoop(root, dataNode);
+		}	
 	}
 	
 	public TreeNode find(Integer data) {
@@ -21,11 +29,135 @@ public class Tree {
 	}
 	
 	private void insertRecursive(TreeNode parentNode, TreeNode dataNode) {
-		//
+		if ( parentNode == null || dataNode == null ) {
+			return;
+		}
+		
+		if (dataNode.getData() < parentNode.getData()) {
+			if ( parentNode.getLeft() == null ) {
+				parentNode.setLeft(dataNode);
+			}
+			else {
+				insertRecursive(parentNode.getLeft(), dataNode);
+			}
+		}
+		else {
+			if (parentNode.getRight() == null) {
+				parentNode.setRight(dataNode);
+			}
+			else {
+				insertRecursive(parentNode.getRight(), dataNode);
+			}
+		}
+	}
+	
+	private void insertByLoop(TreeNode parentNode, TreeNode dataNode) {
+		if ( dataNode == null ) {
+			return;
+		}
+		
+		while ( parentNode != null ) {
+		if (dataNode.getData() < parentNode.getData()) {
+			if ( parentNode.getLeft() == null ) {
+				parentNode.setLeft(dataNode);
+				break;
+			}
+			else {
+				parentNode = parentNode.getLeft();
+			}
+		}
+		else {
+			if (parentNode.getRight() == null) {
+				parentNode.setRight(dataNode);
+				break;
+			}
+			else {
+				parentNode = parentNode.getRight();
+			}
+		}
+		}
 	}
 	
 	private TreeNode findRecursive(TreeNode node, Integer data) {
+		if ( node == null ) {
+			return null;
+		}
+		
+		if (node.getData() == data) {
+			return node;
+		}
+		else if (data < node.getData()) {
+			return findRecursive(node.getLeft(), data);
+		}
+		else if (data > node.getData()) {
+			return findRecursive(node.getRight(), data);
+		}
 		return null;
+	}
+	
+	private TreeNode findByLoop(TreeNode node, Integer data) {
+		if (node == null) {
+			return null;
+		}
+		
+		while (node != null) {
+			if (data < node.getData()) {
+				if (node.getLeft() == null) {
+					return node;
+				}
+				else {
+					node = node.getLeft();
+				}
+			}
+			else {
+				if (node.getRight() == null) {
+					return node;
+				}
+				else {
+					node = node.getRight();
+				}
+			}
+		}
+		return null;
+	}
+	/**
+	 * https://en.wikipedia.org/wiki/Tree_traversal
+	 * 
+	 * 4 traverse ways: (1) In-order (2) Pre-order (3) Post-order (4) Breadth-first
+	 */
+	public void traverseRecursive(TreeNode node) {
+		if (node == null) {
+			return;
+		}
+		
+		traverseRecursive(node.getLeft());
+		traverseRecursive(node.getRight());
+		visit(node);
+	}
+	
+	public void traverseBF() {
+		LinkedList<TreeNode> list = new LinkedList<TreeNode>();
+		if ( root != null ) {
+			list.addFirst(root);
+		}
+		
+		while ( !list.isEmpty() ) {
+			TreeNode node = list.removeLast();
+			
+			if ( node.getLeft() != null ) {
+				list.addFirst(node.getLeft());
+			}
+			if ( node.getRight() != null ) {
+				list.addFirst(node.getRight());
+			}
+			
+			visit(node);
+		}
+		
+	}
+	
+	public void visit(TreeNode node) {
+		System.out.println(node.getData());
 	}
 	
 	public static void main(String[] args) {
@@ -42,7 +174,20 @@ public class Tree {
 		tree.insert(new TreeNode(124));
 		tree.insert(new TreeNode(33));
 
-		tree.printTopView();
+		System.out.println("\n");
+		
+		tree.traverseBF();
+
+		
+		
+/*
+		System.out.println(tree.find(88));
+		System.out.println(tree.find(13));
+		System.out.println(tree.find(44));
+		System.out.println(tree.find(33));
+		System.out.println(tree.find(124));
+		System.out.println(tree.find(71));
+*/		
 	}
 	
     public void printTopView()
